@@ -1,15 +1,42 @@
 package com.isobar.jmann.coffee_app;
 
-import android.support.v7.app.ActionBarActivity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Parcelable;
+import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.TextView;
+
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.isobar.jmann.coffee_app.models.SpecificCoffee;
+import com.isobar.jmann.coffee_app.singleton.VolleySingleton;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 public class SplashActivity extends ActionBarActivity {
+
+    List<SpecificCoffee> specificCoffees = new ArrayList<>();
+
+    private static final String url = "https://coffeeapi.percolate.com/api/coffee/";
+    private static final String key = "api_key";
+    private static final String key_value = "WuVbkuUsCXHPx3hsQzus4SE";
+
+    public static final String ARRAY_KEY = "array_key";
+
+    long startTime;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,6 +45,11 @@ public class SplashActivity extends ActionBarActivity {
         setContentView(R.layout.activity_splash);
 
         getSupportActionBar().hide();
+
+        startTime = System.currentTimeMillis();
+
+        // kick off JSON request
+        retrieveJSONdata();
     }
 
 
@@ -41,5 +73,90 @@ public class SplashActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void retrieveJSONdata() {
+
+        Map<String, String> params = new HashMap<>();
+        params.put(key, key_value);
+
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest("https://coffeeapi.percolate.com/api/coffee/?api_key=WuVbkuUsCXHPx3hsQzus4SE", new Response.Listener<JSONArray>() {
+
+            @Override
+            public void onResponse(JSONArray response) {
+                Log.i("SplashActivity", "response is " + response);
+
+                String desc;
+                String image_url;
+                String id;
+                String name;
+
+                for (int i = 0; i < response.length(); i++) {
+
+                    try {
+                        desc = (String)((JSONObject)response.get(i)).get("desc");
+                        image_url = (String)((JSONObject)response.get(i)).get("image_url");
+                        id = (String)((JSONObject)response.get(i)).get("id");
+                        name = (String)((JSONObject)response.get(i)).get("name");
+                        specificCoffees.add(new SpecificCoffee(desc, image_url, id, name));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    // proceed to List activity
+
+                    // first check that Splash screen stays up for minimum 3 seconds
+                    long timeNow = System.currentTimeMillis();
+                    if (timeNow - startTime > 3000) {
+                        transitionToList();
+                    } else {
+
+                        Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                transitionToList();
+                            }
+                        }, (3000 - startTime));
+                    }
+
+
+
+                }
+
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i("SplashActivity", "error is " + error);
+            }
+        });
+
+        VolleySingleton.getInstance(this).getRequestQueue().add(jsonArrayRequest);
+
+//        JacksonRequest<CoffeeList> jacksonRequest = new JacksonRequest<CoffeeList>(Request.Method.GET, url, params, new JacksonRequestListener<CoffeeList>() {
+//            @Override
+//            public void onResponse(CoffeeList response, int statusCode, VolleyError error) {
+//
+//                if (response != null) {
+//                    Log.i("SplashActivity", "response is " + response);
+//                }
+//            }
+//
+//            @Override
+//            public JavaType getReturnType() {
+//                //return SimpleType.construct(CoffeeList.class);
+//                return TypeFactory.defaultInstance().constructCollectionType(CoffeeList.class, SpecificCoffee.class);
+//            }
+//        });
+//
+//        VolleySingleton.getInstance(this).getRequestQueue().add(jacksonRequest);
+    }
+
+    private void transitionToList() {
+        Intent intent = new Intent(SplashActivity.this, CoffeeListActivity.class);
+        intent.putParcelableArrayListExtra(ARRAY_KEY, (ArrayList<? extends Parcelable>)specificCoffees);
+        startActivity(intent);
     }
 }

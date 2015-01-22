@@ -33,7 +33,7 @@
         android:maxLength="2"
         android:ellipsize="end"/>
     
-    <ImageView
+    <com.android.volley.toolbox.NetworkImageView
         android:id="@+id/coffee_img"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
