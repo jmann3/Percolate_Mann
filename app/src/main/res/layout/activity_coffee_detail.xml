@@ -29,10 +29,10 @@
 
     <com.isobar.jmann.coffee_app.widget.FadeInNetworkImageView
         android:id="@+id/large_image"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
-        android:scaleType="fitXY"/>
+        android:scaleType="centerInside"/>
 
     <TextView
         android:id="@+id/last_update"
