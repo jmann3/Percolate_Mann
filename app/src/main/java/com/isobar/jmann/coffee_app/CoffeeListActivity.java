@@ -24,6 +24,7 @@ import com.isobar.jmann.coffee_app.models.SpecificCoffee;
 import com.isobar.jmann.coffee_app.recyclerview.DividerItemDecoration;
 import com.isobar.jmann.coffee_app.recyclerview.RecyclerItemClickListener;
 import com.isobar.jmann.coffee_app.singleton.VolleySingleton;
+import com.isobar.jmann.coffee_app.widget.FadeInNetworkImageView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +35,8 @@ public class CoffeeListActivity extends ActionBarActivity {
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
     private CoffeeAdapter mCoffeeAdapter;
+
+    public static final String DETAIL_DATA = "detail_data";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +63,7 @@ public class CoffeeListActivity extends ActionBarActivity {
             public void onItemClick(View view, int position) {
 
                 // go to Detail View
-                transitionToDetail();
+                transitionToDetail(position);
             }
         }));
 
@@ -92,8 +95,9 @@ public class CoffeeListActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void transitionToDetail() {
+    private void transitionToDetail(int position) {
         Intent intent = new Intent(CoffeeListActivity.this, CoffeeDetailActivity.class);
+        intent.putExtra(DETAIL_DATA, mCoffeeAdapter.getItem(position));
 
         // pass the items details
 
@@ -112,7 +116,7 @@ public class CoffeeListActivity extends ActionBarActivity {
         public class ViewHolder extends RecyclerView.ViewHolder {
                 TextView mTitle;
                 TextView mContent;
-                NetworkImageView mImage;
+                FadeInNetworkImageView mImage;
                 ImageView mRight_arrow;
 
             public ViewHolder(View itemView) {
@@ -120,7 +124,7 @@ public class CoffeeListActivity extends ActionBarActivity {
 
                 mTitle = (TextView)itemView.findViewById(R.id.title);
                 mContent = (TextView)itemView.findViewById(R.id.description);
-                mImage = (NetworkImageView)itemView.findViewById(R.id.coffee_img);
+                mImage = (FadeInNetworkImageView)itemView.findViewById(R.id.coffee_img);
                 mRight_arrow = (ImageView)itemView.findViewById(R.id.right_arrow);
             }
         }
@@ -144,11 +148,16 @@ public class CoffeeListActivity extends ActionBarActivity {
 
             ImageLoader imageLoader = VolleySingleton.getInstance(CoffeeListActivity.this).getImageLoader();
             viewHolder.mImage.setImageUrl(specificCoffee.getImage_url(), imageLoader);
+
         }
 
         @Override
         public int getItemCount() {
             return mCoffees.size();
+        }
+
+        public SpecificCoffee getItem(int position) {
+            return mCoffees.get(position);
         }
     }
 }

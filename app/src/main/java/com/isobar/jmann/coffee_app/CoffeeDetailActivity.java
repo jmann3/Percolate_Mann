@@ -4,15 +4,37 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
+
+import com.android.volley.toolbox.ImageLoader;
+import com.isobar.jmann.coffee_app.models.SpecificCoffee;
+import com.isobar.jmann.coffee_app.singleton.VolleySingleton;
+import com.isobar.jmann.coffee_app.widget.FadeInNetworkImageView;
 
 
 public class CoffeeDetailActivity extends ActionBarActivity {
+
+    SpecificCoffee mSpecificCoffee;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
         setContentView(R.layout.activity_coffee_detail);
+
+        // retrieve data for views
+        mSpecificCoffee = getIntent().getParcelableExtra(CoffeeListActivity.DETAIL_DATA);
+
+        // populate views
+        TextView title = (TextView)findViewById(R.id.title);
+        title.setText(mSpecificCoffee.getName());
+
+        TextView content = (TextView)findViewById(R.id.description);
+        content.setText(mSpecificCoffee.getDesc());
+
+        FadeInNetworkImageView image = (FadeInNetworkImageView)findViewById(R.id.large_image);
+        ImageLoader imageLoader = VolleySingleton.getInstance(CoffeeDetailActivity.this).getImageLoader();
+        image.setImageUrl(mSpecificCoffee.getImage_url(), imageLoader);
     }
 
 

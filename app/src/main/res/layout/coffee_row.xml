@@ -29,8 +29,8 @@
         android:maxLines="2"
         android:ellipsize="end"
         style="@style/SmallFont"/>
-    
-    <com.android.volley.toolbox.NetworkImageView
+
+    <com.isobar.jmann.coffee_app.widget.FadeInNetworkImageView
         android:id="@+id/coffee_img"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

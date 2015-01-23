@@ -2,6 +2,7 @@ package com.isobar.jmann.coffee_app;
 
 import android.app.ActivityOptions;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
@@ -12,7 +13,9 @@ import android.view.MenuItem;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.Volley;
 import com.isobar.jmann.coffee_app.models.SpecificCoffee;
 import com.isobar.jmann.coffee_app.singleton.VolleySingleton;
 
@@ -166,5 +169,19 @@ public class SplashActivity extends ActionBarActivity {
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 
         finish();
+    }
+
+    private void downloadImage(String url) {
+        VolleySingleton.getInstance(SplashActivity.this).getImageLoader().get(url, new ImageLoader.ImageListener() {
+            @Override
+            public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
+                Bitmap bitmap = response.getBitmap();
+            }
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
     }
 }
