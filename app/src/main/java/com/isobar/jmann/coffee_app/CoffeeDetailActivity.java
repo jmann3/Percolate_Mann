@@ -1,5 +1,6 @@
 package com.isobar.jmann.coffee_app;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -29,6 +30,12 @@ public class CoffeeDetailActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
         setContentView(R.layout.activity_coffee_detail);
+
+        // format actionbar
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setIcon(R.drawable.drip_white2);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // retrieve data for views
         mSpecificCoffee = getIntent().getParcelableExtra(CoffeeListActivity.DETAIL_DATA);
@@ -90,11 +97,22 @@ public class CoffeeDetailActivity extends ActionBarActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+
+            case R.id.share: {
+
+                Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+                sharingIntent.setType("text/plain");
+
+                startActivity(Intent.createChooser(sharingIntent, "Share via"));
+
+                return true;
+            }
         }
 
         return super.onOptionsItemSelected(item);

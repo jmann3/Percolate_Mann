@@ -100,8 +100,6 @@ public class SplashActivity extends ActionBarActivity {
                     try {
                         desc = (String)((JSONObject)response.get(i)).get("desc");
 
-                        Log.d("SplashActivity", "description is " + desc);
-
                         image_url = (String)((JSONObject)response.get(i)).get("image_url");
                         id = (String)((JSONObject)response.get(i)).get("id");
                         name = (String)((JSONObject)response.get(i)).get("name");

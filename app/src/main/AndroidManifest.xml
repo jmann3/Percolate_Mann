@@ -23,12 +23,12 @@
         </activity>
         <activity
             android:name=".CoffeeListActivity"
-            android:label="@string/title_activity_coffee_list" >
+            android:label="@string/title_activity_coffee_list">
         </activity>
 
-        <service
-            android:name="com.octo.android.robospice.JacksonSpringAndroidSpiceService"
-            android:exported="false" />
+        <!--<service-->
+            <!--android:name="com.octo.android.robospice.JacksonSpringAndroidSpiceService"-->
+            <!--android:exported="false" />-->
 
         <activity
             android:name=".CoffeeDetailActivity"

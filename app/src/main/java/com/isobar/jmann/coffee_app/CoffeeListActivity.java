@@ -44,6 +44,11 @@ public class CoffeeListActivity extends ActionBarActivity {
 
         setContentView(R.layout.activity_coffee_list);
 
+        // format actionbar
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setIcon(R.drawable.drip_white2);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
         mRecyclerView = (RecyclerView)findViewById(R.id.recycler_view);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.addItemDecoration(new DividerItemDecoration(CoffeeListActivity.this, DividerItemDecoration.VERTICAL_LIST));
@@ -69,7 +74,12 @@ public class CoffeeListActivity extends ActionBarActivity {
 
     }
 
-
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem settingsItem = menu.findItem(R.id.action_settings);
+        settingsItem.setVisible(false);
+        return false;
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
