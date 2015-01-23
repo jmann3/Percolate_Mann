@@ -29,6 +29,11 @@
         <service
             android:name="com.octo.android.robospice.JacksonSpringAndroidSpiceService"
             android:exported="false" />
+
+        <activity
+            android:name=".CoffeeDetailActivity"
+            android:label="@string/title_activity_coffee_detail" >
+        </activity>
     </application>
 
 </manifest>

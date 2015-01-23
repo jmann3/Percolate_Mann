@@ -1,22 +1,69 @@
 package com.isobar.jmann.coffee_app;
 
+import android.content.Context;
+import android.content.Intent;
+import android.os.Parcelable;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
+import com.isobar.jmann.coffee_app.models.SpecificCoffee;
+import com.isobar.jmann.coffee_app.recyclerview.DividerItemDecoration;
+import com.isobar.jmann.coffee_app.recyclerview.RecyclerItemClickListener;
+import com.isobar.jmann.coffee_app.singleton.VolleySingleton;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class CoffeeListActivity extends ActionBarActivity {
 
-
+    private RecyclerView mRecyclerView;
+    private RecyclerView.LayoutManager mLayoutManager;
+    private CoffeeAdapter mCoffeeAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_coffee_list);
+
+        mRecyclerView = (RecyclerView)findViewById(R.id.recycler_view);
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(CoffeeListActivity.this, DividerItemDecoration.VERTICAL_LIST));
+
+        // use linear layout manager
+        mLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
+        // specify an adapter
+        ArrayList<SpecificCoffee> specificCoffees = getIntent().getParcelableArrayListExtra(SplashActivity.ARRAY_KEY);
+        mCoffeeAdapter = new CoffeeAdapter(specificCoffees);
+        mRecyclerView.setAdapter(mCoffeeAdapter);
+
+        // add click listener for list rows
+        mRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this, new RecyclerItemClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+
+                // go to Detail View
+                transitionToDetail();
+            }
+        }));
+
     }
 
 
@@ -45,5 +92,63 @@ public class CoffeeListActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    private void transitionToDetail() {
+        Intent intent = new Intent(CoffeeListActivity.this, CoffeeDetailActivity.class);
 
+        // pass the items details
+
+        startActivity(intent);
+        overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
+    }
+
+    public class CoffeeAdapter extends RecyclerView.Adapter<CoffeeAdapter.ViewHolder> {
+
+        private List<SpecificCoffee> mCoffees;
+
+        public CoffeeAdapter(List<SpecificCoffee> coffees) {
+            mCoffees = coffees;
+        }
+
+        public class ViewHolder extends RecyclerView.ViewHolder {
+                TextView mTitle;
+                TextView mContent;
+                NetworkImageView mImage;
+                ImageView mRight_arrow;
+
+            public ViewHolder(View itemView) {
+                super(itemView);
+
+                mTitle = (TextView)itemView.findViewById(R.id.title);
+                mContent = (TextView)itemView.findViewById(R.id.description);
+                mImage = (NetworkImageView)itemView.findViewById(R.id.coffee_img);
+                mRight_arrow = (ImageView)itemView.findViewById(R.id.right_arrow);
+            }
+        }
+
+        @Override
+        public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int position) {
+
+            // create a new view
+            View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.coffee_row, viewGroup, false);
+
+            return new ViewHolder(v);
+        }
+
+        @Override
+        public void onBindViewHolder(ViewHolder viewHolder, int position) {
+            // use elements from data set to populate row
+            SpecificCoffee specificCoffee = mCoffees.get(position);
+
+            viewHolder.mTitle.setText(specificCoffee.getName());
+            viewHolder.mContent.setText(specificCoffee.getDesc());
+
+            ImageLoader imageLoader = VolleySingleton.getInstance(CoffeeListActivity.this).getImageLoader();
+            viewHolder.mImage.setImageUrl(specificCoffee.getImage_url(), imageLoader);
+        }
+
+        @Override
+        public int getItemCount() {
+            return mCoffees.size();
+        }
+    }
 }

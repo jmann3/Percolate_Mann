@@ -1,5 +1,6 @@
 package com.isobar.jmann.coffee_app;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -27,7 +28,7 @@ import java.util.Map;
 
 public class SplashActivity extends ActionBarActivity {
 
-    List<SpecificCoffee> specificCoffees = new ArrayList<>();
+    ArrayList<SpecificCoffee> specificCoffees = new ArrayList<>();
 
     private static final String url = "https://coffeeapi.percolate.com/api/coffee/";
     private static final String key = "api_key";
@@ -95,6 +96,9 @@ public class SplashActivity extends ActionBarActivity {
 
                     try {
                         desc = (String)((JSONObject)response.get(i)).get("desc");
+
+                        Log.d("SplashActivity", "description is " + desc);
+
                         image_url = (String)((JSONObject)response.get(i)).get("image_url");
                         id = (String)((JSONObject)response.get(i)).get("id");
                         name = (String)((JSONObject)response.get(i)).get("name");
@@ -156,7 +160,11 @@ public class SplashActivity extends ActionBarActivity {
 
     private void transitionToList() {
         Intent intent = new Intent(SplashActivity.this, CoffeeListActivity.class);
-        intent.putParcelableArrayListExtra(ARRAY_KEY, (ArrayList<? extends Parcelable>)specificCoffees);
+        intent.putExtra(ARRAY_KEY, specificCoffees);
+
         startActivity(intent);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+
+        finish();
     }
 }

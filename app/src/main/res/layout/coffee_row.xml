@@ -4,34 +4,31 @@
     android:layout_height="match_parent"
     android:layout_margin="10dp">
     
-    <ImageButton
+    <ImageView
         android:id="@+id/right_arrow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true" 
-        android:src="@drawable/ic_launcher"/>
+        android:layout_alignParentRight="true"
+        android:layout_marginLeft="5dp"
+        android:src="@drawable/right_arrow_light_gray_cal"/>
     
     <TextView
         android:id="@+id/title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:textColor="@color/dark_gray"/>
+        style="@style/MediumFont"/>
     
     <TextView
         android:id="@+id/description"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:layout_below="@id/title"
         android:layout_alignParentLeft="true"
-        android:layout_toRightOf="@id/right_arrow"
+        android:layout_toLeftOf="@id/right_arrow"
         android:layout_marginBottom="5dp"
-        android:textColor="@color/light_gray"
-        android:maxLength="2"
-        android:ellipsize="end"/>
+        android:maxLines="2"
+        android:ellipsize="end"
+        style="@style/SmallFont"/>
     
     <com.android.volley.toolbox.NetworkImageView
         android:id="@+id/coffee_img"
