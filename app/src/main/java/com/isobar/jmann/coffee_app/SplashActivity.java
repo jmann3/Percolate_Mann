@@ -33,9 +33,9 @@ public class SplashActivity extends ActionBarActivity {
 
     ArrayList<SpecificCoffee> specificCoffees = new ArrayList<>();
 
-    private static final String url = "https://coffeeapi.percolate.com/api/coffee/";
-    private static final String key = "api_key";
-    private static final String key_value = "WuVbkuUsCXHPx3hsQzus4SE";
+    public static final String url = "https://coffeeapi.percolate.com/api/coffee/";
+    public static final String key = "api_key";
+    public static final String key_value = "WuVbkuUsCXHPx3hsQzus4SE";
 
     public static final String ARRAY_KEY = "array_key";
 

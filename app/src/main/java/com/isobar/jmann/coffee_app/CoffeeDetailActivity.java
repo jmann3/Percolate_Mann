@@ -2,14 +2,22 @@ package com.isobar.jmann.coffee_app;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.isobar.jmann.coffee_app.models.SpecificCoffee;
 import com.isobar.jmann.coffee_app.singleton.VolleySingleton;
 import com.isobar.jmann.coffee_app.widget.FadeInNetworkImageView;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
 public class CoffeeDetailActivity extends ActionBarActivity {
@@ -29,8 +37,40 @@ public class CoffeeDetailActivity extends ActionBarActivity {
         TextView title = (TextView)findViewById(R.id.title);
         title.setText(mSpecificCoffee.getName());
 
-        TextView content = (TextView)findViewById(R.id.description);
-        content.setText(mSpecificCoffee.getDesc());
+        final TextView content = (TextView)findViewById(R.id.description);
+        final TextView lastUpdate = (TextView)findViewById(R.id.last_update);
+
+        // perform network request for detailed description and date
+        StringBuilder detailUrl = new StringBuilder();
+        detailUrl.append(SplashActivity.url);
+        detailUrl.append(mSpecificCoffee.getId());
+        detailUrl.append("/");
+        detailUrl.append("?");
+        detailUrl.append(SplashActivity.key);
+        detailUrl.append("=");
+        detailUrl.append(SplashActivity.key_value);
+
+        // retrieve the full description
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, detailUrl.toString(), null, new Response.Listener<JSONObject>() {
+
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    content.setText(response.getString("desc"));
+                    lastUpdate.setText(response.getString("last_updated_at"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+
+        VolleySingleton.getInstance(CoffeeDetailActivity.this).getRequestQueue().add(jsonObjectRequest);
 
         FadeInNetworkImageView image = (FadeInNetworkImageView)findViewById(R.id.large_image);
         ImageLoader imageLoader = VolleySingleton.getInstance(CoffeeDetailActivity.this).getImageLoader();
