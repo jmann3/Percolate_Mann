@@ -8,6 +8,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * Created by jmann on 1/22/15.
+ *
+ * POJO for JSON object elements.
+ * implemented Parcelable interface to allow to be passed as extra
  */
 
 public class SpecificCoffee implements Parcelable {
@@ -16,6 +19,10 @@ public class SpecificCoffee implements Parcelable {
     private String image_url;
     private String id;
     private String name;
+
+    public SpecificCoffee() {
+
+    }
 
     public SpecificCoffee(String desc, String image_url, String id, String name) {
         this.desc = desc;
