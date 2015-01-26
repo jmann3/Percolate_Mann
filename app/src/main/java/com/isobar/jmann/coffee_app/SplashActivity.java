@@ -2,6 +2,7 @@ package com.isobar.jmann.coffee_app;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
@@ -12,11 +13,7 @@ import android.view.MenuItem;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageLoader;
-import com.fasterxml.jackson.databind.AnnotationIntrospector;
-import com.fasterxml.jackson.databind.JavaType;
 import com.isobar.jmann.coffee_app.jackson.JacksonRequest;
-import com.isobar.jmann.coffee_app.models.CoffeeList;
 import com.isobar.jmann.coffee_app.models.SpecificCoffee;
 import com.isobar.jmann.coffee_app.singleton.VolleySingleton;
 
@@ -115,66 +112,7 @@ public class SplashActivity extends ActionBarActivity {
         });
 
         VolleySingleton.getInstance(SplashActivity.this).getRequestQueue().add(jacksonRequest);
-//
-//
-//        Map<String, String> params = new HashMap<>();
-//        params.put(key, key_value);
-//
-//        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest("https://coffeeapi.percolate.com/api/coffee/?api_key=WuVbkuUsCXHPx3hsQzus4SE", new Response.Listener<JSONArray>() {
-//
-//            @Override
-//            public void onResponse(JSONArray response) {
-//                //Log.i("SplashActivity", "response is " + response);
-//
-//                String desc;
-//                String image_url;
-//                String id;
-//                String name;
-//
-//                for (int i = 0; i < response.length(); i++) {
-//
-//                    try {
-//                        desc = (String)((JSONObject)response.get(i)).get("desc");
-//
-//                        image_url = (String)((JSONObject)response.get(i)).get("image_url");
-//                        id = (String)((JSONObject)response.get(i)).get("id");
-//                        name = (String)((JSONObject)response.get(i)).get("name");
-//                        specificCoffees.add(new SpecificCoffee(desc, image_url, id, name));
-//                    } catch (JSONException e) {
-//                        e.printStackTrace();
-//                    }
-//
-//                    // proceed to List activity
-//
-//                    // first check that Splash screen stays up for minimum 3 seconds
-//                    long timeNow = System.currentTimeMillis();
-//                    if (timeNow - startTime > 3000) {
-//                        transitionToList();
-//                    } else {
-//
-//                        Handler handler = new Handler();
-//                        handler.postDelayed(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                transitionToList();
-//                            }
-//                        }, (3000 - startTime));
-//                    }
-//
-//
-//
-//                }
-//
-//
-//            }
-//        }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                Log.i("SplashActivity", "error is " + error);
-//            }
-//        });
-//
-//        VolleySingleton.getInstance(this).getRequestQueue().add(jsonArrayRequest);
+
 
     }
 
@@ -188,17 +126,23 @@ public class SplashActivity extends ActionBarActivity {
         finish();
     }
 
-    private void downloadImage(String url) {
-        VolleySingleton.getInstance(SplashActivity.this).getImageLoader().get(url, new ImageLoader.ImageListener() {
-            @Override
-            public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
-                Bitmap bitmap = response.getBitmap();
-            }
+    private void resizeAndStoreBitmap(Bitmap bitmap, int imageNum) {
 
-            @Override
-            public void onErrorResponse(VolleyError error) {
+        // compress bitmap by factor of 2
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
 
-            }
-        });
+        // create matrix for Manipulation
+        Matrix matrix = new Matrix();
+
+        // Resize the bitmap
+        matrix.postScale((float)width/2, (float)height/2);
+
+        // create new bitmap
+        Bitmap resizedBitmap = Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, false);
+
+        // store bitmap in cache
+        //ScaledImageCache.getInstance().getBitmaps().put(imageNum, resizedBitmap);
     }
+
 }

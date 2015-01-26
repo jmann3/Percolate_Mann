@@ -1,25 +1,19 @@
 package com.isobar.jmann.coffee_app;
 
-import android.content.Context;
 import android.content.Intent;
-import android.os.Parcelable;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.NetworkImageView;
 import com.isobar.jmann.coffee_app.models.SpecificCoffee;
 import com.isobar.jmann.coffee_app.recyclerview.DividerItemDecoration;
 import com.isobar.jmann.coffee_app.recyclerview.RecyclerItemClickListener;
