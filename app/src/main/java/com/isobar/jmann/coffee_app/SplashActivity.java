@@ -22,6 +22,7 @@ import com.isobar.jmann.coffee_app.singleton.VolleySingleton;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 
 public class SplashActivity extends ActionBarActivity {
@@ -76,9 +77,12 @@ public class SplashActivity extends ActionBarActivity {
 
     private void retrieveJSONdata() {
 
+        HashMap<String, String> headers = new HashMap<>();
+        headers.put("Authorization", key_value);
+
         //JavaType listType = Mapper.get().getTypeFactory().constructCollectionType(ArrayList.class, SpecificCoffee.class);
-        JacksonRequest<SpecificCoffee[]> jacksonRequest = new JacksonRequest<SpecificCoffee[]>(Request.Method.GET, "https://coffeeapi.percolate.com/api/coffee/?api_key=WuVbkuUsCXHPx3hsQzus4SE",
-                SpecificCoffee[].class, null, new Response.Listener<SpecificCoffee[]>() {
+        JacksonRequest<SpecificCoffee[]> jacksonRequest = new JacksonRequest<SpecificCoffee[]>(Request.Method.GET, url,
+                SpecificCoffee[].class, headers, new Response.Listener<SpecificCoffee[]>() {
 
             @Override
             public void onResponse(SpecificCoffee[] response) {
